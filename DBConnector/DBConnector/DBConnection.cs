@@ -26,9 +26,9 @@ namespace DBConnector
         private void Initialize()
         {
             server = "127.0.0.1";
-            database = "schools";
+            database = "database";
             uid = "root";
-            password = "0x38be";
+            password = "password";
 
             string connectionString;
             connectionString = "SERVER=" + server + ";" + "DATABASE=" +
