@@ -1,0 +1,5 @@
+c:\users\first\documents\visual studio 2015\Projects\Navigator\Navigator\bin\Debug\Navigator.exe.config
+c:\users\first\documents\visual studio 2015\Projects\Navigator\Navigator\bin\Debug\Navigator.exe
+c:\users\first\documents\visual studio 2015\Projects\Navigator\Navigator\bin\Debug\Navigator.pdb
+c:\users\first\documents\visual studio 2015\Projects\Navigator\Navigator\obj\Debug\Navigator.exe
+c:\users\first\documents\visual studio 2015\Projects\Navigator\Navigator\obj\Debug\Navigator.pdb
