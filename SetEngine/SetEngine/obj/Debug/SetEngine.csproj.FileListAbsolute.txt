@@ -1,0 +1,12 @@
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\bin\Debug\SetEngine.exe.config
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\bin\Debug\SetEngine.exe
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\bin\Debug\SetEngine.pdb
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\obj\Debug\SetEngine.csprojResolveAssemblyReference.cache
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\obj\Debug\SetEngine.exe
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\obj\Debug\SetEngine.pdb
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\bin\Debug\DBConnector.exe
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\bin\Debug\MySql.Data.dll
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\bin\Debug\Navigator.exe
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\bin\Debug\DBConnector.pdb
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\bin\Debug\MySql.Data.xml
+c:\users\first\documents\visual studio 2015\Projects\SetEngine\SetEngine\bin\Debug\Navigator.pdb
