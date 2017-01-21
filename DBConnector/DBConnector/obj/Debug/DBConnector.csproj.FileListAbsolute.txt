@@ -1,0 +1,8 @@
+c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\bin\Debug\DBConnector.exe.config
+c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\bin\Debug\DBConnector.exe
+c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\bin\Debug\DBConnector.pdb
+c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\bin\Debug\MySql.Data.dll
+c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\bin\Debug\MySql.Data.xml
+c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\obj\Debug\DBConnector.csprojResolveAssemblyReference.cache
+c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\obj\Debug\DBConnector.exe
+c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\obj\Debug\DBConnector.pdb
