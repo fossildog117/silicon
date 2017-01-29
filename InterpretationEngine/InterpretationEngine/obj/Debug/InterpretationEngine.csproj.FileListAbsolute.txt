@@ -1,0 +1,8 @@
+c:\users\first\documents\visual studio 2015\Projects\InterpretationEngine\InterpretationEngine\bin\Debug\InterpretationEngine.exe.config
+c:\users\first\documents\visual studio 2015\Projects\InterpretationEngine\InterpretationEngine\bin\Debug\InterpretationEngine.exe
+c:\users\first\documents\visual studio 2015\Projects\InterpretationEngine\InterpretationEngine\bin\Debug\InterpretationEngine.pdb
+c:\users\first\documents\visual studio 2015\Projects\InterpretationEngine\InterpretationEngine\bin\Debug\Navigator.exe
+c:\users\first\documents\visual studio 2015\Projects\InterpretationEngine\InterpretationEngine\bin\Debug\Navigator.pdb
+c:\users\first\documents\visual studio 2015\Projects\InterpretationEngine\InterpretationEngine\obj\Debug\InterpretationEngine.csprojResolveAssemblyReference.cache
+c:\users\first\documents\visual studio 2015\Projects\InterpretationEngine\InterpretationEngine\obj\Debug\InterpretationEngine.exe
+c:\users\first\documents\visual studio 2015\Projects\InterpretationEngine\InterpretationEngine\obj\Debug\InterpretationEngine.pdb
