@@ -20,7 +20,7 @@ namespace LinqTesting
                 DbProviderFactory dbf = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
                 using (DbConnection dbcn = dbf.CreateConnection())
                 {
-                    dbcn.ConnectionString = "Server=localhost;Database=schools;Uid=root;Pwd=0x38be;";
+                    dbcn.ConnectionString = "Server=localhost;Database=schools;Uid=root;Pwd=password;";
                     dbcn.Open();
                     using (DbCommand dbcmd = dbcn.CreateCommand())
                     {
