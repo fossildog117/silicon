@@ -1,13 +1,52 @@
-﻿using DBConnector;
+﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using DBConnector;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using System;
+using System.Configuration;
 using System.IO;
+using Newtonsoft.Json;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SetEngine
 {
+
+    class BlobPusher
+    {
+        public BlobPusher() { }
+        public void push(object objToPush)
+        {
+            string blobConnString = ConfigurationManager.ConnectionStrings["azureStorageConnection"].ConnectionString;
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(blobConnString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer blobContainer = blobClient.GetContainerReference("sets");
+            blobContainer.CreateIfNotExists();
+
+            var binFormatter = new BinaryFormatter();
+            var mStream = new MemoryStream();
+
+            CloudBlockBlob blob = blobContainer.GetBlockBlobReference(objToPush.GetHashCode().ToString());
+
+            try
+            {
+                string json = JsonConvert.SerializeObject(objToPush);
+                binFormatter.Serialize(mStream, json);
+                mStream.Position = 0;
+                blob.UploadFromStream(mStream);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+    }
+
     class Program
     {
+
+        static BlobPusher blobPusher = new BlobPusher();
+
         static void Main(string[] args)
         {
             DBConnection connection = new DBConnection();
@@ -55,6 +94,8 @@ namespace SetEngine
 
                 dataReader.Close();
 
+                blobPusher.push(columns);
+
                 // Iterate through each column with the primary key (id) column
                 foreach (String column in columns)
                 {
@@ -85,10 +126,10 @@ namespace SetEngine
 
                         if (key.ToUpper().Contains("STUDENT"))
                         {
-                            file = new BinaryWriter(new FileStream(navigator.GetStudentFilePath() + FilterSpecialCharacters(key), FileMode.Create));
+                            file = new BinaryWriter(new FileStream(navigator.GetStudentFilePath() + "STU$" + table + "$" + column, FileMode.Create));
                         } else
                         {
-                            file = new BinaryWriter(new FileStream(navigator.GetSchoolFilePath() + FilterSpecialCharacters(key), FileMode.Create));
+                            file = new BinaryWriter(new FileStream(navigator.GetSchoolFilePath() + "SCH$" + table + "$" + column, FileMode.Create));
                         }
 
                         while (dataReader2.Read())
