@@ -35,6 +35,33 @@ namespace Navigator
 
     }
 
+    public class DeploymentNavigator : Navigator
+    {
+        public readonly String rootPath = @"D:\home\site\mock-data\Sets\";
+        public readonly String schoolPath = @"D:\home\site\mock-data\Sets\Schools\";
+        public readonly String studentPath = @"D:\home\site\mock-data\Sets\Students\";
+
+        public String[] ShowStudents()
+        {
+            return Directory.GetFiles(studentPath);
+        }
+
+        public String[] ShowSchools()
+        {
+            return Directory.GetFiles(schoolPath);
+        }
+
+        public String GetStudentFilePath()
+        {
+            return studentPath;
+        }
+
+        public String GetSchoolFilePath()
+        {
+            return schoolPath;
+        }
+    }
+
     class Program
     {
 
