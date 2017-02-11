@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nav = Navigator;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace InterpretationEngine
 {
@@ -82,20 +83,11 @@ namespace InterpretationEngine
             Console.WriteLine(filePath);
 
             // Read binary file that has been retrieved
-            BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open));
+            //BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open));
+            BlobReader reader = new BlobReader();
 
-            // Create dictionary from data set
-            Dictionary<int, string> points = new Dictionary<int, string>();
-
-            // Create return structure by iterating through the dictionary
-            while (reader.BaseStream.Position != reader.BaseStream.Length)
-            {
-                string[] pair = reader.ReadString().Split('\t');
-                points.Add(Int32.Parse(pair[0]), pair[1]);
-            }            
-            reader.Close();
-
-            return (new ReturnStructure(points)).GetPoints();
+            // Create return structure from data set 
+            return (new ReturnStructure(reader.ReadRequest(filePath))).GetPoints();
 
         }
 

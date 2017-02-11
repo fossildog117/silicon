@@ -11,37 +11,14 @@ namespace InterpretationEngine
     {
         static void Main(string[] args)
         {
-            Interpreter interpreter = new Interpreter();
-            Dictionary<int, string> first = interpreter.RetreiveList("0_school_city");
-            Dictionary<int, string> second = interpreter.RetreiveList("0_school_region");
 
-            foreach (KeyValuePair<int, string> pair in first)
+            Interpreter inter = new Interpreter();
+            foreach( KeyValuePair<int, string> pair in inter.RetreiveList("0_school_public"))
             {
-                Console.WriteLine(pair.Key + " : " + pair.Value);
+                Console.WriteLine(pair.Key + ": " + pair.Value);
             }
 
-
-            Console.WriteLine("--------");
-            Console.ReadKey();
-
-            foreach (KeyValuePair<int, string> pair in second)
-            {
-                Console.WriteLine(pair.Key + " : " + pair.Value);
-            }
-
-            // var results = l1.Zip(l2, (x, y) => x + y);
-            Console.ReadKey();
-            Dictionary < int, string> resultDict = first.Keys.Intersect(second.Keys)
-                              .ToDictionary(t => t, t => first[t]);
-
-
-            foreach (KeyValuePair<int, string> pair in resultDict)
-            {
-                Console.WriteLine(pair.Key + " = " + pair.Value);
-            }
-
-
-            Console.ReadKey();
+            Console.ReadKey(); 
         }
     }
 }
