@@ -1,0 +1,5 @@
+/Users/nathanliu/Projects/DecisionTree/DecisionTree/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/nathanliu/Projects/DecisionTree/DecisionTree/bin/Debug/DecisionTree.exe.mdb
+/Users/nathanliu/Projects/DecisionTree/DecisionTree/bin/Debug/DecisionTree.exe
+/Users/nathanliu/Projects/DecisionTree/DecisionTree/obj/x86/Debug/DecisionTree.exe
+/Users/nathanliu/Projects/DecisionTree/DecisionTree/obj/x86/Debug/DecisionTree.exe.mdb
