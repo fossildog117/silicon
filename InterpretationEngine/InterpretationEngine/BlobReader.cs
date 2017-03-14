@@ -13,10 +13,8 @@ namespace InterpretationEngine
 {
     public class BlobReader
     {
-        public BlobReader() { }
         public Dictionary<int, string> ReadRequest(string request)
         {
-
             Dictionary<int, string> blobData = new Dictionary<int, string>();
             string blobConnString = ConfigurationManager.ConnectionStrings["azureStorageConnection"].ConnectionString;
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(blobConnString);
@@ -29,17 +27,19 @@ namespace InterpretationEngine
                 try
                 {
                     block.DownloadToStream(memoryStream);
+
                     string data = Encoding.UTF8.GetString(memoryStream.ToArray());
                     string[] values = data.Split(',');
 
-                    for (int i = 1; i < values.Length - 1; i++)
+                    for (int i = 1; i < values.Length; i++)
                     {
-                        string s = Regex.Replace(values[i], "\"", "");
-                        string[] pair = Regex.Replace(s, @"\\t", ";").Split(';');
+                        string s = Regex.Replace(values[i], "\"|.*{|}.*", "");
+                        string[] pair = s.Split(':');
                         blobData.Add(Int32.Parse(pair[0]), pair[1]);
                     }
 
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     Console.WriteLine(e.ToString());
                 }
