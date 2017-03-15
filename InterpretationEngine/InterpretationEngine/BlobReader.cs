@@ -14,34 +14,34 @@ namespace InterpretationEngine
     public class BlobReader
     {
 
-		public MemoryStream DownloadData(string request) {
+	public MemoryStream DownloadData(string request) {
 
-			string blobConnString = ConfigurationManager.ConnectionStrings["azureStorageConnection"].ConnectionString;
-			CloudStorageAccount storageAccount = CloudStorageAccount.Parse(blobConnString);
-			CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-			CloudBlobContainer blobContainer = blobClient.GetContainerReference("sets");
-			CloudBlockBlob block = blobContainer.GetBlockBlobReference(request);
+		string blobConnString = ConfigurationManager.ConnectionStrings["azureStorageConnection"].ConnectionString;
+		CloudStorageAccount storageAccount = CloudStorageAccount.Parse(blobConnString);
+		CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+		CloudBlobContainer blobContainer = blobClient.GetContainerReference("sets");
+		CloudBlockBlob block = blobContainer.GetBlockBlobReference(request);
 
-			MemoryStream memoryStream = new MemoryStream();
+		MemoryStream memoryStream = new MemoryStream();
 
-			try {
-				block.DownloadToStream(memoryStream);
-			} catch {
-				Console.WriteLine("Failed to download data from blob.");
-			}
-
-			return memoryStream;
-
+		try {
+			block.DownloadToStream(memoryStream);
+		} catch {
+			Console.WriteLine("Failed to download data from blob.");
 		}
 
-		public string GetJson(string request) {
-			return Encoding.UTF8.GetString(DownloadData(request).ToArray());
-		}
+		return memoryStream;
 
-		public int GetSetSize(string request) {
-			int length = Encoding.UTF8.GetString(DownloadData(request).ToArray()).Split(',').Length;
-			return length > 0 ? length : 0 ;		
-		}
+	}
+
+	public string GetJson(string request) {
+		return Encoding.UTF8.GetString(DownloadData(request).ToArray());
+	}
+
+	public int GetSetSize(string request) {
+		int length = Encoding.UTF8.GetString(DownloadData(request).ToArray()).Split(',').Length;
+		return length > 0 ? length : 0 ;		
+	}
 
         public Dictionary<int, string> GetSet(string request)
         {
