@@ -13,36 +13,50 @@ namespace InterpretationEngine
 {
     public class BlobReader
     {
-        public BlobReader() { }
-        public Dictionary<int, string> ReadRequest(string request)
+
+		public MemoryStream DownloadData(string request) {
+
+			string blobConnString = ConfigurationManager.ConnectionStrings["azureStorageConnection"].ConnectionString;
+			CloudStorageAccount storageAccount = CloudStorageAccount.Parse(blobConnString);
+			CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+			CloudBlobContainer blobContainer = blobClient.GetContainerReference("sets");
+			CloudBlockBlob block = blobContainer.GetBlockBlobReference(request);
+
+			MemoryStream memoryStream = new MemoryStream();
+
+			try {
+				block.DownloadToStream(memoryStream);
+			} catch {
+				Console.WriteLine("Failed to download data from blob.");
+			}
+
+			return memoryStream;
+
+		}
+
+		public string GetJson(string request) {
+			return Encoding.UTF8.GetString(DownloadData(request).ToArray());
+		}
+
+		public int GetSetSize(string request) {
+			int length = Encoding.UTF8.GetString(DownloadData(request).ToArray()).Split(',').Length;
+			return length > 0 ? length : 0 ;		
+		}
+
+        public Dictionary<int, string> GetSet(string request)
         {
-
             Dictionary<int, string> blobData = new Dictionary<int, string>();
-            string blobConnString = ConfigurationManager.ConnectionStrings["azureStorageConnection"].ConnectionString;
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(blobConnString);
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer blobContainer = blobClient.GetContainerReference("sets");
-            CloudBlockBlob block = blobContainer.GetBlockBlobReference(request);
-        
-            using (var memoryStream = new MemoryStream())
+
+			MemoryStream memoryStream = DownloadData(request);
+
+            string data = Encoding.UTF8.GetString(memoryStream.ToArray());
+            string[] values = data.Split(',');
+
+            for (int i = 1; i < values.Length; i++)
             {
-                try
-                {
-                    block.DownloadToStream(memoryStream);
-                    string data = Encoding.UTF8.GetString(memoryStream.ToArray());
-                    string[] values = data.Split(',');
-
-                    for (int i = 1; i < values.Length - 1; i++)
-                    {
-                        string s = Regex.Replace(values[i], "\"", "");
-                        string[] pair = Regex.Replace(s, @"\\t", ";").Split(';');
-                        blobData.Add(Int32.Parse(pair[0]), pair[1]);
-                    }
-
-                } catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
+                string s = Regex.Replace(values[i], "\"|.*{|}.*", "");
+                string[] pair = s.Split(':');
+                blobData.Add(Int32.Parse(pair[0]), pair[1]);
             }
 
             return blobData;

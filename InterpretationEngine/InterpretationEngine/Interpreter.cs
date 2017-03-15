@@ -79,7 +79,8 @@ namespace InterpretationEngine
         public Dictionary<int, string> RetreiveList(string line)
         {
             // Interpret meaning of line
-            string filePath = getFile(InferListProperties(line), getID(line));
+            //string filePath = getFile(InferListProperties(line), getID(line));
+            string filePath = line;
             Console.WriteLine(filePath);
 
             // Read binary file that has been retrieved
@@ -87,10 +88,10 @@ namespace InterpretationEngine
             BlobReader reader = new BlobReader();
 
             // Create return structure from data set 
-            return (new ReturnStructure(reader.ReadRequest(filePath))).GetPoints();
-
+			return (new ReturnStructure(reader.GetSet(filePath))).GetPoints();
+ 
         }
-
+        /*
         private string getFile(Tuple<string, string> data, int helperID)
         {
             string[] files;
@@ -177,5 +178,6 @@ namespace InterpretationEngine
         {
             return Int32.Parse(line.Split('_')[0]);
         }
+        */
     }
 }
