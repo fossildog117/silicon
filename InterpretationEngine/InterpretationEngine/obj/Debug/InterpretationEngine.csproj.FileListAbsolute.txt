@@ -61,3 +61,6 @@ C:\Users\first\Documents\Visual Studio 2015\Projects\InterpretationEngine\Interp
 C:\Users\first\Documents\Visual Studio 2015\Projects\InterpretationEngine\InterpretationEngine\bin\Debug\ru\System.Spatial.resources.dll
 C:\Users\first\Documents\Visual Studio 2015\Projects\InterpretationEngine\InterpretationEngine\bin\Debug\zh-Hans\System.Spatial.resources.dll
 C:\Users\first\Documents\Visual Studio 2015\Projects\InterpretationEngine\InterpretationEngine\bin\Debug\zh-Hant\System.Spatial.resources.dll
+C:\Users\USER\Documents\silicon\InterpretationEngine\InterpretationEngine\bin\Debug\InterpretationEngine.exe.config
+C:\Users\USER\Documents\silicon\InterpretationEngine\InterpretationEngine\obj\Debug\InterpretationEngine.exe
+C:\Users\USER\Documents\silicon\InterpretationEngine\InterpretationEngine\obj\Debug\InterpretationEngine.pdb
