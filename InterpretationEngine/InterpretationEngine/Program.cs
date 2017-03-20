@@ -1,140 +1,178 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Nav = Navigator;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using System.Configuration;
-using Newtonsoft.Json;
-using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
-using System.Threading;
 
 namespace InterpretationEngine
 {
+	class Bar
+	{
+		public string uri { get; }
+		public string value { get; }
+		public double height { get; set; }
 
-    class Bar
+		public Bar(string uri, string value)
+		{
+			this.uri = uri;
+			this.value = value;
+		}
+	}
+
+	class Line
+	{
+		string name;
+		List<Point> points;
+	}
+
+	class Point
+	{
+
+		double y;
+		double x;
+
+		public Point(double x, double y)
+		{
+			this.x = x;
+			this.y = y;
+		}
+
+	}
+
+	class Titles {
+
+		string xAxis;
+		string yAxis;
+		string title;
+
+		public Titles(string xAxis, string yAxis, string title) {
+			this.xAxis = xAxis;
+			this.yAxis = yAxis;
+			this.title = title;
+		}
+
+	}
+
+	abstract class Chart {
+		
+		public Titles titles;
+		public List<Bar> bars;
+		public List<Line> lines;
+	
+	}
+
+	class PieChart : Chart {
+	
+		public PieChart() {
+			this.bars = new List<Bar>();
+		}
+
+	}
+
+
+	class LineGraph : Chart {
+
+		public LineGraph(string xAxis, string yAxis, string title = "") {
+			this.titles = new Titles(xAxis, yAxis, title);
+			lines = new List<Line>();
+		}
+
+		public void GenerateLines() {
+
+			// function to get data
+			// generate lines from data
+
+		}
+
+	}
+
+	class BarChart : Chart
     {
-        public string uri     { get; }
-        public string value   { get; }
-        public double height  { get; set; }
-
-        public Bar(string uri, string value)
+        public BarChart(string xAxis, string yAxis, string title = "")
         {
-            this.uri = uri;
-            this.value = value;
+			this.titles = new Titles(xAxis, yAxis, title);
+			this.bars = new List<Bar>();
         }
     }
 
-    class BarChart
-    {
-        public string xAxis;
-        public string yAxis;
-        public List<Bar> bars;
+	class ChartEngine {
 
-        public BarChart()
-        {
+		public BlobReader reader { get; set;}
+		public Chart chart { get; set; }
 
-        }
+		public ChartEngine() {
+			this.reader = new BlobReader();
+		}
 
-        public BarChart(string xAxis, string yAxis)
-        {
-            this.xAxis = xAxis;
-            this.yAxis = yAxis;
-            this.bars = new List<Bar>();
-        }
-    }
+		private string findValue(string uri) {
 
-    class Program
-    {
+			if (uri.Length <= 0)
+			{
+				return "";
+			}
 
-        static BarChart chart;
-		static BlobReader reader = new BlobReader();
+			if (uri.Last() == '/')
+			{
+				return "";
+			}
 
-        static string findValue(string uri)
-        {
-            if (uri.Length <= 0)
-            {
-                return "";
-            }
+			return uri.Last() + findValue(uri.Substring(0, uri.Length - 1));
 
-            if (uri.Last() == '/')
-            {
-                return "";
-            }
+		}
 
-            return uri.Last() + findValue(uri.Substring(0, uri.Length - 1));
-        }
+		private List<Bar> DirectoryList(string directory) {
 
-        static List<Bar> DirectoryList(string directory)
-        {
 			string setName = "sets";
-            List<Bar> outputList = new List<Bar>();
+			List<Bar> outputList = new List<Bar>();
 
-			foreach (var value in reader.blobContainer.ListBlobs(directory)) 
-            {
-                string filePath = value.Uri.LocalPath.Substring(setName.Length + 2);
+			foreach (var value in reader.blobContainer.ListBlobs(directory))
+			{
+				string filePath = value.Uri.LocalPath.Substring(setName.Length + 2);
 				outputList.Add(new Bar(value.Uri.LocalPath.Substring(setName.Length + 2), findValue(filePath)));
-            }
+			}
 
-            return outputList;
+			return outputList;
+		}
 
-        }
-
-        static void calculateHeights(string request)
-        {
+		public void calculateHeights(string request) {
 
 			chart.bars = DirectoryList(request);
 			Task[] tasks = new Task[chart.bars.Count];
 			int counter = 0;
 
 			foreach (Bar directory in chart.bars)
-            {
+			{
 				tasks[counter++] = Task.Factory.StartNew(() => setHeight(directory));
-            }
+			}
 
 			Task.WaitAll(tasks);
 
-        }
+		}
 
-		static void setHeight(Bar bar) {
+		private void setHeight(Bar bar) {
 			bar.height = reader.GetSetSize(bar.uri);
 		}
 
-        public static string SerializeObject<T>(T serializableObject)
-        {
-            Console.WriteLine("Attempting to seralize...");
+	}
 
-            XmlSerializer xmlSerializer = new XmlSerializer(serializableObject.GetType());
-
-            using (StringWriter textWriter = new StringWriter())
-            {
-                xmlSerializer.Serialize(textWriter, serializableObject);
-                return textWriter.ToString();
-            }
-
-        }
-
-
+    class Program
+	{
+     
         static void Main(string[] args)
         {
 
-
-
-
+			ChartEngine engine = new ChartEngine();
 			// Dictionary<int, string> firstListRandom = inter.RetreiveList("C:/Sets/Students/STU$gcse$A/11");
 			// Dictionary<int, string> secondListRandom= inter.RetreiveList("C:/Sets/Students/STU$student_stats$attendance/p_1");
 
 			// Dictionary<int, string> firstListFull = reader.ReadRequest("C:/Sets/Students/STU$gcse$A/11");
 			// Dictionary<int, string> secondListFull = reader.ReadRequest("C:/Sets/Students/STU$student_stats$attendance/p_1");
 			//string request = "student_a";
-			chart = new BarChart("Number of As", "Frequency");
-			calculateHeights("C:/Sets/Students/STU$gcse$A/");
+			engine.chart = new BarChart("Number of As", "Frequency");
+			engine.calculateHeights("C:/Sets/Students/STU$gcse$A/");
 
-			foreach (Bar b in chart.bars) {
+			foreach (Bar b in engine.chart.bars) {
 				Console.WriteLine(b.uri + " : " + b.height);
 			}
 

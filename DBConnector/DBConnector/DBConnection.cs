@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DBConnector
@@ -26,7 +27,7 @@ namespace DBConnector
         private void Initialize()
         {
             server = "127.0.0.1";
-            database = "database";
+            database = "hello";
             uid = "root";
             password = "password";
 
@@ -84,7 +85,7 @@ namespace DBConnector
 
         public List<String> GetTables()
         {
-            String query = "show tables from schools";
+            String query = "show tables from hello";
             MySqlCommand cmd = new MySqlCommand(query, connection);
             MySqlDataReader dataReader = cmd.ExecuteReader();
 
@@ -101,8 +102,50 @@ namespace DBConnector
         }
 
 
-        // Get list of school IDs
-        // Randomly select 400 school IDs and insert them into the sampleDB
+		// Get list of school IDs
+		// Randomly select 400 school IDs and insert them into the sampleDB
+
+		public void GetFile(String filename = "")
+		{
+
+			// select convert(na using utf8) from hello.new_table;
+
+			try
+			{
+
+				int[] values = { 1, 2, 3, 4, 5, 6, 10, 11 };
+
+				Task[] tasks = new Task[values.Length];
+				int counter = 0;
+
+				foreach (int val in values)
+				{
+					tasks[counter++] = Task.Factory.StartNew(() => printBarSize(val));
+				}
+
+				Task.WaitAll(tasks);
+			} catch (Exception e) {
+				Console.WriteLine(e);
+			}
+		}
+
+		public void printBarSize(int val) {
+
+			string query = "select convert (na using utf8) from hello.new_table where idnew_table = " + val;
+
+			MySqlCommand cmd = new MySqlCommand(query, new DBConnection().connection);
+			MySqlDataReader reader = cmd.ExecuteReader();
+			string output = String.Empty;
+			while (reader.Read())
+			{
+				output += reader.GetString(0);
+			}
+
+			Console.WriteLine(output.Split(',').Length);
+
+			reader.Close();
+
+		}
 
         public void ExecuteNonQuery(String query)
         {

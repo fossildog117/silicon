@@ -1,0 +1,14 @@
+﻿<Properties StartupItem="DBConnector/DBConnector.csproj">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DBConnector/DBConnection.cs">
+    <Files>
+      <File FileName="DBConnector/DBConnection.cs" Line="122" Column="6" />
+      <File FileName="DBConnector/Program.cs" Line="28" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.DBConnector PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>

@@ -1,0 +1,9 @@
+/Users/nathanliu/Downloads/silicon-master/DBConnector/DBConnector/obj/Debug/.NETFramework,Version=v4.5.2.AssemblyAttribute.cs
+/Users/nathanliu/Downloads/silicon-master/DBConnector/DBConnector/bin/Debug/DBConnector.exe.config
+/Users/nathanliu/Downloads/silicon-master/DBConnector/DBConnector/bin/Debug/DBConnector.exe.mdb
+/Users/nathanliu/Downloads/silicon-master/DBConnector/DBConnector/bin/Debug/DBConnector.pdb
+/Users/nathanliu/Downloads/silicon-master/DBConnector/DBConnector/bin/Debug/DBConnector.exe
+/Users/nathanliu/Downloads/silicon-master/DBConnector/DBConnector/obj/Debug/DBConnector.exe
+/Users/nathanliu/Downloads/silicon-master/DBConnector/DBConnector/obj/Debug/DBConnector.exe.mdb
+/Users/nathanliu/Downloads/silicon-master/DBConnector/DBConnector/obj/Debug/DBConnector.pdb
+/Users/nathanliu/Downloads/silicon-master/DBConnector/DBConnector/bin/Debug/MySql.Data.dll

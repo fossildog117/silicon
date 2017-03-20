@@ -1,0 +1,15 @@
+﻿<Properties StartupItem="InterpretationEngine/InterpretationEngine.csproj">
+  <MonoDevelop.Ide.Workbench ActiveDocument="InterpretationEngine/Program.cs">
+    <Files>
+      <File FileName="InterpretationEngine/BlobReader.cs" Line="14" Column="28" />
+      <File FileName="InterpretationEngine/Program.cs" Line="27" Column="3" />
+      <File FileName="InterpretationEngine/Interpreter.cs" Line="20" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.InterpretationEngine PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>
