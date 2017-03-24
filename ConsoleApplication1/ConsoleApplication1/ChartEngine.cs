@@ -27,34 +27,40 @@ namespace CE
             this.blobContainer = blobClient.GetContainerReference("sets");
         }
 
-        public MemoryStream DownloadData(string request)
+        public byte[] DownloadData(string request)
         {
+			byte[] arrayOutput;
+			using (MemoryStream memoryStream = new MemoryStream())
+			{
+				try
+				{
+					blobContainer.GetBlockBlobReference(request).DownloadToStream(memoryStream);
+				}
+				catch
+				{
+					Console.WriteLine("Failed to download data from blob.");
+				}
+				finally 
+				{
+					arrayOutput = memoryStream.ToArray();
+				}
+			}
 
-            MemoryStream memoryStream = new MemoryStream();
-
-            try
-            {
-                blobContainer.GetBlockBlobReference(request).DownloadToStream(memoryStream);
-            }
-            catch
-            {
-                Console.WriteLine("Failed to download data from blob.");
-            }
-
-            return memoryStream;
+			return arrayOutput;
 
         }
 
-        public string GetJson(string request)
+		public string GetJson(string request)
         {
-            return Encoding.UTF8.GetString(DownloadData(request).ToArray());
-        }
+			string v = Encoding.UTF8.GetString(DownloadData(request));
+			string s = Regex.Replace(v, ".*{", "{");
+			string t = Regex.Replace(s, "}.*", "}");
+			return t;
+		}
 
         public int GetSetSize(string request)
-        {
-            MemoryStream s = DownloadData(request);
-            s.Position = 0;
-            int length = new StreamReader(s).ReadToEnd().Split(',').Length;
+        {          
+			int length = GetJson(request).Split(',').Length;
             return length > 0 ? length - 1 : 0;
         }
 
@@ -62,9 +68,7 @@ namespace CE
         {
             Dictionary<int, string> blobData = new Dictionary<int, string>();
 
-            MemoryStream memoryStream = DownloadData(request);
-
-            string data = Encoding.UTF8.GetString(memoryStream.ToArray());
+			string data = GetJson(request);
             string[] values = data.Split(',');
 
             for (int i = 1; i < values.Length; i++)
@@ -77,6 +81,26 @@ namespace CE
             return blobData;
 
         }
+
+		public Dictionary<string, string> GetMap()
+		{
+			Dictionary<string, string> blobData = new Dictionary<string, string>();
+
+			string data = GetJson("SetMap");
+			string[] values = data.Split(',');
+
+			for (int i = 1; i < values.Length; i++)
+			{
+				Console.WriteLine(values[i]);
+				string s = Regex.Replace(values[i], "\"|.*{|}.*", "");
+				string[] pair = s.Split(':');
+				blobData.Add(pair[0], pair[1]);
+			}
+
+			return blobData;
+
+		}
+
     }
 
     public class ChartEngine
