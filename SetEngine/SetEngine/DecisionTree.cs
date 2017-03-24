@@ -35,12 +35,14 @@ namespace SetEngine
 
             int groupSize = Convert.ToInt32(Math.Ceiling((decimal)inputSet.Count / numberOfGroups));
 
-            var result = inputSet.OrderBy(pair => double.Parse(pair.Value))
-                                 .GroupBy(x => i++ / groupSize);
+            List<Dictionary<int, string>> result = inputSet.OrderBy(pair => double.Parse(pair.Value))
+                                 .GroupBy(x => i++ / groupSize)
+                                 .Select(d => d.ToDictionary(pair => pair.Key, pair => pair.Value))
+                                 .ToList();
 
             int counter = 1;
             Console.WriteLine(filePath);
-            foreach (var dictionary in result)
+            foreach (Dictionary<int, string> dictionary in result)
             {
                 pusher.push(dictionary, filePath + "/" + counter++);
             }

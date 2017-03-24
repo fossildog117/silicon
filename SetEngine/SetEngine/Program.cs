@@ -6,6 +6,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
@@ -17,7 +18,7 @@ namespace SetEngine
     class BlobPusher
     {
         public BlobPusher() { }
-        public void push(object objToPush, string filePath)
+        public void push(Dictionary<int, string> objToPush, string filePath)
         {
             string blobConnString = ConfigurationManager.ConnectionStrings["azureStorageConnection"].ConnectionString;
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(blobConnString);
@@ -30,29 +31,69 @@ namespace SetEngine
 
             CloudBlockBlob blob = blobContainer.GetBlockBlobReference(filePath);
 
+            var binFormatterSize = new BinaryFormatter();
+            var mStreamSize = new MemoryStream();
+            CloudBlockBlob setSize = blobContainer.GetBlockBlobReference(filePath + "-size");
+
             try
             {
                 string json = JsonConvert.SerializeObject(objToPush);
                 binFormatter.Serialize(mStream, json);
                 mStream.Position = 0;
                 blob.UploadFromStream(mStream);
+
+                string setSizeJson = JsonConvert.SerializeObject(objToPush.Count);
+                binFormatterSize.Serialize(mStreamSize, setSizeJson);
+                mStreamSize.Position = 0;
+                setSize.UploadFromStream(mStreamSize);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
+
+        public void pushMap(Dictionary<string, string> objToPush, string setMap = "SetMap")
+        {
+            string blobConnString = ConfigurationManager.ConnectionStrings["azureStorageConnection"].ConnectionString;
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(blobConnString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer blobContainer = blobClient.GetContainerReference("sets");
+            blobContainer.CreateIfNotExists();
+
+            var binFormatter = new BinaryFormatter();
+            var mStream = new MemoryStream();
+
+            CloudBlockBlob blob = blobContainer.GetBlockBlobReference(setMap);
+            
+            try
+            {
+                string json = JsonConvert.SerializeObject(objToPush);
+                binFormatter.Serialize(mStream, json);
+                mStream.Position = 0;
+                blob.UploadFromStream(mStream);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+
     }
 
     class Program
     {
 
         static BlobPusher blobPusher = new BlobPusher();
+        static Dictionary<string, string> setMappings = new Dictionary<string, string>();
 
         static void Main(string[] args)
         {
             DBConnection connection = new DBConnection();
             GenerateSets(connection);
+            blobPusher.pushMap(setMappings);
             Console.WriteLine("Program finished, press any key to continue...");
             Console.ReadKey();
 
@@ -81,12 +122,12 @@ namespace SetEngine
                 // Put the columns into a List
                 // If column is primary key assign a separate variable to it
                 List<String> columns = new List<String>();
-                String primaryKeyColumn = String.Empty;
+                string primaryKey = String.Empty;
                 while (dataReader.Read())
                 {
                     if (dataReader.GetString(3).Equals("PRI"))
                     {
-                        primaryKeyColumn = dataReader.GetString(0);
+                        primaryKey = dataReader.GetString(0);
                     }
                     else
                     {
@@ -100,7 +141,8 @@ namespace SetEngine
                 foreach (String column in columns)
                 {
                     //select idstudent, year from schools.gcse;
-                    String statement = "select `" + primaryKeyColumn + "`, `" + column + "` from schools." + table + ";";
+                    string statement = "select `" + primaryKey + "`, `" + column + "` from schools." + table + ";";
+
                     Console.WriteLine(statement);
 
                     // Set time out to something huge
@@ -113,7 +155,7 @@ namespace SetEngine
 
                     // Unique name of set 
                     // Defined by: ID - Column_name
-                    String key = primaryKeyColumn + "-" + column;
+                    String key = primaryKey + "-" + column;
 
                     try
                     {
@@ -126,17 +168,16 @@ namespace SetEngine
 
                         string path;
                         Dictionary<int, string> outputDictionary = new Dictionary<int, string>();
-
-
+                        
                         if (key.ToUpper().Contains("STUDENT"))
                         {
-                            path = navigator.GetStudentFilePath() + "STU$" + table + "$" + column;
-                            file = new BinaryWriter(new FileStream(path, FileMode.Create));
+                            path = "Sets/Student/" + table + "/" + column;
                         } else
                         {
-                            path = navigator.GetSchoolFilePath() + "SCH$" + table + "$" + column;
-                            file = new BinaryWriter(new FileStream(path, FileMode.Create));
+                            path = "Sets/School/" + table + "/" + column;
                         }
+
+                        setMappings.Add(table + "-" + column, path);
 
                         while (dataReader2.Read())
                         {
@@ -144,7 +185,6 @@ namespace SetEngine
                             string value1 = dataReader2.GetString(1);
                             String output = key1 + "\t" + value1;
                             outputDictionary.Add(key1, value1);
-                            file.Write(output);
                         }
 
                         Task[] tasks = new Task[2];
@@ -153,7 +193,6 @@ namespace SetEngine
 
                         Task.WaitAll(tasks);
 
-                        file.Close();
                         dataReader2.Close();
 
                     }
