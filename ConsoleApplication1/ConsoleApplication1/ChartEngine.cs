@@ -42,7 +42,9 @@ namespace CE
 				}
 				finally 
 				{
+					memoryStream.Position = 0;
 					arrayOutput = memoryStream.ToArray();
+					memoryStream.Flush();
 				}
 			}
 
@@ -68,7 +70,7 @@ namespace CE
         {
             Dictionary<int, string> blobData = new Dictionary<int, string>();
 
-			string data = GetJson(request);
+			string data = Encoding.UTF8.GetString(DownloadData(request));
             string[] values = data.Split(',');
 
             for (int i = 1; i < values.Length; i++)
@@ -91,7 +93,6 @@ namespace CE
 
 			for (int i = 1; i < values.Length; i++)
 			{
-				Console.WriteLine(values[i]);
 				string s = Regex.Replace(values[i], "\"|.*{|}.*", "");
 				string[] pair = s.Split(':');
 				blobData.Add(pair[0], pair[1]);

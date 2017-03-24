@@ -10,6 +10,24 @@ namespace CE
     class Program
     {
 
+		static Dictionary<int, string> GetSetMap(string request) {
+			// string request = student_stats-attendance
+			// student_stats-attendance : Sets/Student/student_stats/attendance
+
+			BlobReader reader = new BlobReader();
+			Dictionary<string, string> setMap = reader.GetMap();
+
+			string filePath = setMap[request];
+
+			Console.WriteLine(filePath);
+
+			Dictionary<int, string> retDict = reader.GetSet(filePath);
+
+			Console.WriteLine("==============");
+
+			return retDict;
+		}
+
         static void Main(string[] args)
         {
 
@@ -22,21 +40,19 @@ namespace CE
 			//         Console.WriteLine("Retrieved Line Graph");
 			//Console.WriteLine("-------------------");
 
+			Dictionary<int, string> mySet = GetSetMap("students-gender");
 
-			BlobReader reader = new BlobReader();
-			var outputSet = reader.GetSet("Sets/School/school/public");
+			Console.WriteLine("---------------");
 
-			foreach (var pair in outputSet) {
+			foreach (KeyValuePair<int, string> pair in mySet) {
 				Console.WriteLine(pair.Key + " : " + pair.Value);
 			}
 
-			var size = reader.GetSetSize("Sets/School/school/public");
-			Console.WriteLine("Size: " + size);
+			//var output = reader.GetJson("SetMap");
 
-			var output = reader.GetJson("Sets/School/school/public/1");
+			//Console.WriteLine(output);
 
-			Console.WriteLine(output);
-            Console.ReadKey();
+			//Console.ReadKey();
         }
     }
 }
