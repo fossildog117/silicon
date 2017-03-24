@@ -1,13 +1,55 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DecisionTree
 {
 	class MainClass
 	{
 
-		public static void parse(Dictionary<int, string> inputSet) {
+        public static void createDiscreteSets(Dictionary<int, string> inputSet)
+        {
+
+            List<Dictionary<int, string>> dictionaryList = inputSet.GroupBy(pair => pair.Value)
+                                                                     .Select(d => d.ToDictionary(pair => pair.Key, pair => pair.Value))
+                                                                     .ToList();
+
+            foreach (Dictionary<int, string> dict in dictionaryList)
+            {
+                Console.WriteLine("--------");
+                foreach (KeyValuePair<int, string> pair in dict)
+                {
+                    Console.WriteLine(pair.Value + " : " + pair.Key);
+                }
+                Console.WriteLine("--------");
+            }
+
+        }
+
+        public static void createPercentiles(Dictionary<int, string> inputSet)
+        {
+
+            decimal numberOfGroups = 100;
+            int i = 0;
+            int groupSize = Convert.ToInt32(Math.Ceiling(inputSet.Count / numberOfGroups));
+
+            var result = inputSet.OrderBy(pair => double.Parse(pair.Value))
+                                 .GroupBy(x => i++ / groupSize);
+
+            foreach (var dictionary in result)
+            {
+                Console.WriteLine("--------");
+                foreach (KeyValuePair<int, string> pair in dictionary)
+                {
+                    Console.WriteLine(pair.Value + " : " + pair.Key);
+                }
+                Console.WriteLine("--------");
+            }
+
+        }
+
+        public static void parse(Dictionary<int, string> inputSet) {
 
 			HashSet<string> values = new HashSet<string>();
 			Boolean allNumeric = true;
@@ -31,8 +73,8 @@ namespace DecisionTree
 
 			// If Set only has 2 unique elements
 			if (values.Count <= 2) {
-				
-				Console.WriteLine("Boolean");
+
+                createDiscreteSets(inputSet);
 
 			// If set only has numeric values
 			} else if (allNumeric) {
@@ -42,10 +84,13 @@ namespace DecisionTree
 
 				// Check if unique sets can be created 
 				if (values.Count < numericThreshold) {
-					Console.WriteLine("Should be categorised");	
-				} else {
-					// Create sets based on percentile
-					Console.WriteLine("Should be categorised based on percentage");
+
+                    // Categorise sets
+                    createDiscreteSets(inputSet);
+
+                } else {
+                    // Create sets based on percentile
+                    createPercentiles(inputSet);
 				}
 
 			} else {
@@ -57,8 +102,8 @@ namespace DecisionTree
 
 				if ((double)values.Count/(double)inputSet.Count < stringThreshold) {
 
-					// Create unique sets
-					Console.WriteLine("Create unique sets");
+                    // Create unique sets
+                    createDiscreteSets(inputSet);
 
 				} else {
 
@@ -105,6 +150,8 @@ namespace DecisionTree
 			someSet.Add(71, "Haran");
 
 			parse(someSet);
+
+            Console.ReadKey();
 
 		}
 	}

@@ -8,6 +8,8 @@ using System.Configuration;
 using System.IO;
 using Newtonsoft.Json;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SetEngine
 {
@@ -15,7 +17,7 @@ namespace SetEngine
     class BlobPusher
     {
         public BlobPusher() { }
-        public void push(object objToPush)
+        public void push(object objToPush, string filePath)
         {
             string blobConnString = ConfigurationManager.ConnectionStrings["azureStorageConnection"].ConnectionString;
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(blobConnString);
@@ -26,7 +28,7 @@ namespace SetEngine
             var binFormatter = new BinaryFormatter();
             var mStream = new MemoryStream();
 
-            CloudBlockBlob blob = blobContainer.GetBlockBlobReference(objToPush.GetHashCode().ToString());
+            CloudBlockBlob blob = blobContainer.GetBlockBlobReference(filePath);
 
             try
             {
@@ -94,8 +96,6 @@ namespace SetEngine
 
                 dataReader.Close();
 
-                blobPusher.push(columns);
-
                 // Iterate through each column with the primary key (id) column
                 foreach (String column in columns)
                 {
@@ -124,19 +124,35 @@ namespace SetEngine
 
                         BinaryWriter file;
 
+                        string path;
+                        Dictionary<int, string> outputDictionary = new Dictionary<int, string>();
+
+
                         if (key.ToUpper().Contains("STUDENT"))
                         {
-                            file = new BinaryWriter(new FileStream(navigator.GetStudentFilePath() + "STU$" + table + "$" + column, FileMode.Create));
+                            path = navigator.GetStudentFilePath() + "STU$" + table + "$" + column;
+                            file = new BinaryWriter(new FileStream(path, FileMode.Create));
                         } else
                         {
-                            file = new BinaryWriter(new FileStream(navigator.GetSchoolFilePath() + "SCH$" + table + "$" + column, FileMode.Create));
+                            path = navigator.GetSchoolFilePath() + "SCH$" + table + "$" + column;
+                            file = new BinaryWriter(new FileStream(path, FileMode.Create));
                         }
 
                         while (dataReader2.Read())
                         {
-                            String output = dataReader2.GetString(0) + "\t" + dataReader2.GetString(1);
+                            int key1 = dataReader2.GetInt32(0);
+                            string value1 = dataReader2.GetString(1);
+                            String output = key1 + "\t" + value1;
+                            outputDictionary.Add(key1, value1);
                             file.Write(output);
                         }
+
+                        Task[] tasks = new Task[2];
+                        tasks[0] = Task.Factory.StartNew(() => blobPusher.push(outputDictionary, path));
+                        tasks[1] = Task.Factory.StartNew(() => DecisionTree.parse(outputDictionary, path, blobPusher));
+
+                        Task.WaitAll(tasks);
+
                         file.Close();
                         dataReader2.Close();
 
