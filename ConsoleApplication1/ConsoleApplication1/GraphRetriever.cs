@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace CE
 {
 	public static class GraphRetriever
 	{
 
 		static ChartEngine engine = new ChartEngine();
+		static BlobReader reader = new BlobReader();
 
 		public static BarChart GetBarChart(string request, string title)
 		{
@@ -38,6 +41,27 @@ namespace CE
 			return (LineGraph)engine.chart;
 		}
 
+		// string request = student_stats-attendance
+		public static Dictionary<int, string> GetSetWithKey(string request)
+		{
+			// student_stats-attendance : Sets/Student/student_stats/attendance
+
+			Dictionary<string, string> setMap = reader.GetMap();
+
+			string filePath = setMap[request];
+
+			Console.WriteLine(filePath);
+
+			Dictionary<int, string> retDict = reader.GetSet(filePath);
+
+			Console.WriteLine("==============");
+
+			return retDict;
+		}
+
+		public static Dictionary<string, string> GetMap() {
+			return reader.GetMap();
+		}
 	}
 }
 
