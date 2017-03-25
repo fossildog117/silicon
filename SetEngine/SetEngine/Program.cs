@@ -42,7 +42,7 @@ namespace SetEngine
                 mStream.Position = 0;
                 blob.UploadFromStream(mStream);
 
-                string setSizeJson = JsonConvert.SerializeObject(objToPush.Count);
+                string setSizeJson = JsonConvert.SerializeObject(GenerateSetInformaiton(objToPush));
                 binFormatterSize.Serialize(mStreamSize, setSizeJson);
                 mStreamSize.Position = 0;
                 setSize.UploadFromStream(mStreamSize);
@@ -78,6 +78,19 @@ namespace SetEngine
             {
                 Console.WriteLine(e.Message);
             }
+        }
+
+        private string setSize(Dictionary<int, string> inputSet)
+        {
+            return inputSet.Count.ToString();
+        }
+
+        private Dictionary<string, string> GenerateSetInformaiton(Dictionary<int, string> inputSet)
+        {
+            Dictionary<string, string> setInformaiton = new Dictionary<string, string>();
+            setInformaiton["size"] = setSize(inputSet);
+
+            return setInformaiton;
         }
 
 
