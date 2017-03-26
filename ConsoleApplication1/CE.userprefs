@@ -1,5 +1,11 @@
 ﻿<Properties StartupItem="ConsoleApplication1/CE.csproj">
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ConsoleApplication1/Program.cs">
+    <Files>
+      <File FileName="ConsoleApplication1/Program.cs" Line="30" Column="22" />
+      <File FileName="ConsoleApplication1/ChartEngine.cs" Line="67" Column="10" />
+      <File FileName="ConsoleApplication1/GraphRetriever.cs" Line="44" Column="47" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
