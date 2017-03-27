@@ -104,7 +104,7 @@ namespace SetEngine
 
         static void Main(string[] args)
         {
-            DBConnection connection = new DBConnection("127.0.0.1", "schools", "root", "0x38be");
+            DBConnection connection = new DBConnection("127.0.0.1", "schools", "root", "password");
             GenerateSets(connection);
             blobPusher.pushMap(setMappings);
             Console.WriteLine("Program finished, press any key to continue...");
