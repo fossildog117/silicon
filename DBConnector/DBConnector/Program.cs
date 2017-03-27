@@ -11,7 +11,7 @@ namespace DBConnector
     {
 		static void Read() {
 
-			string[] fileBytes = File.ReadAllLines("/Users/nathanliu/Downloads/data/10");
+			string[] fileBytes = File.ReadAllLines("filepath");
 			foreach (string s in fileBytes) {
 				Console.WriteLine(s);
 			}
