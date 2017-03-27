@@ -6,3 +6,14 @@ c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\bin
 c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\obj\Debug\DBConnector.csprojResolveAssemblyReference.cache
 c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\obj\Debug\DBConnector.exe
 c:\users\first\documents\visual studio 2015\Projects\DBConnector\DBConnector\obj\Debug\DBConnector.pdb
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\bin\Debug\DBConnector.exe.config
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\obj\Debug\DBConnector.exe
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\obj\Debug\DBConnector.pdb
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\bin\Debug\DBConnector.pdb
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\bin\Debug\AerospikeClient.dll
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\bin\Debug\MySql.Data.dll
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\bin\Debug\Neo.Lua.dll
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\bin\Debug\MySql.Data.xml
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\bin\Debug\Neo.Lua.pdb
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\bin\Debug\Neo.Lua.xml
+C:\Users\USER\Documents\silicon\DBConnector\DBConnector\obj\Debug\DBConnector.csprojResolveAssemblyReference.cache

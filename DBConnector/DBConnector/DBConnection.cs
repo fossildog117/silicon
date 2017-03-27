@@ -23,13 +23,18 @@ namespace DBConnector
             Initialize();
         }
 
-        //Initialize values
-        private void Initialize()
+        public DBConnection(string server, string database, string uid, string password)
         {
-            server = "127.0.0.1";
-            database = "hello";
-            uid = "root";
-            password = "password";
+            Initialize(server, database, uid, password);
+        }
+
+        //Initialize values
+        private void Initialize(string server = "127.0.0.1", string database = "database", string uid = "root", string password = "password")
+        {
+            this.server = server;
+            this.database = database;
+            this.uid = uid;
+            this.password = password;
 
             string connectionString;
             connectionString = "SERVER=" + server + ";" + "DATABASE=" +
@@ -85,19 +90,23 @@ namespace DBConnector
 
         public List<String> GetTables()
         {
-            String query = "show tables from hello";
-            MySqlCommand cmd = new MySqlCommand(query, connection);
-            MySqlDataReader dataReader = cmd.ExecuteReader();
-
             List<String> tables = new List<String>();
-
-            while (dataReader.Read())
+            try
             {
-                tables.Add(dataReader.GetString(0));
+                String query = "show tables from " + database;
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    tables.Add(dataReader.GetString(0));
+                }
+
+                dataReader.Close();
+            } catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
-
-            dataReader.Close();
-
             return tables;
         }
 
@@ -129,6 +138,7 @@ namespace DBConnector
 			}
 		}
 
+        // Redundent function, should be depreciated ASAP
 		public void printBarSize(int val) {
 
 			string query = "select convert (na using utf8) from hello.new_table where idnew_table = " + val;
@@ -164,6 +174,21 @@ namespace DBConnector
         public MySqlConnection GetConnection()
         {
             return connection;
+        }
+
+        public string GetHost()
+        {
+            return this.server;
+        }
+
+        public string GetDatabaseName()
+        {
+            return this.database;
+        }
+
+        public string GetUsername()
+        {
+            return this.uid;
         }
     }
 }
