@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace SetEngine
 {
 
-    class BlobPusher
+    public class BlobPusher
     {
         public BlobPusher() { }
         public void push(Dictionary<int, string> objToPush, string filePath)
@@ -96,7 +96,7 @@ namespace SetEngine
 
     }
 
-    class Program
+    public class SetEngine
     {
 
         static BlobPusher blobPusher = new BlobPusher();
@@ -104,16 +104,19 @@ namespace SetEngine
 
         static void Main(string[] args)
         {
-            DBConnection connection = new DBConnection();
+            DBConnection connection = new DBConnection("127.0.0.1", "schools", "root", "0x38be");
             GenerateSets(connection);
             blobPusher.pushMap(setMappings);
             Console.WriteLine("Program finished, press any key to continue...");
             Console.ReadKey();
-
         }
 
-        static void GenerateSets(DBConnection conn)
+        public static List<Dictionary<int, string>> GenerateSets(DBConnection conn, bool testing = false)
         {
+
+            conn.ExecuteNonQuery("USE " + conn.GetDatabaseName());
+
+            List<Dictionary<int, string>> outputList = new List<Dictionary<int, string>>();
 
             List<String> tables = conn.GetTables();
             Navigator.Navigator navigator = new Navigator.Navigator();
@@ -126,7 +129,7 @@ namespace SetEngine
 
                 // show keys from schools.school where Key_name = 'PRIMARY';
 
-                String query = "show columns from schools." + table;
+                String query = "show columns from " + table;
 
                 // Get List of columns for each table
                 MySqlCommand cmd = new MySqlCommand(query, connection);
@@ -154,7 +157,7 @@ namespace SetEngine
                 foreach (String column in columns)
                 {
                     //select idstudent, year from schools.gcse;
-                    string statement = "select `" + primaryKey + "`, `" + column + "` from schools." + table + ";";
+                    string statement = "select `" + primaryKey + "`, `" + column + "` from " + table + ";";
 
                     Console.WriteLine(statement);
 
@@ -200,11 +203,18 @@ namespace SetEngine
                             outputDictionary.Add(key1, value1);
                         }
 
-                        Task[] tasks = new Task[2];
-                        tasks[0] = Task.Factory.StartNew(() => blobPusher.push(outputDictionary, path));
-                        tasks[1] = Task.Factory.StartNew(() => DecisionTree.parse(outputDictionary, path, blobPusher));
+                        if (testing)
+                        {
+                            outputList.Add(outputDictionary);
+                        }
+                        else
+                        {
+                            Task[] tasks = new Task[2];
+                            tasks[0] = Task.Factory.StartNew(() => blobPusher.push(outputDictionary, path));
+                            tasks[1] = Task.Factory.StartNew(() => DecisionTree.parse(outputDictionary, path, blobPusher));
 
-                        Task.WaitAll(tasks);
+                            Task.WaitAll(tasks);
+                        }
 
                         dataReader2.Close();
 
@@ -222,6 +232,14 @@ namespace SetEngine
                     }
                 }
             }
+
+            return outputList;
+
+        }
+
+        public static Dictionary<int, string> TestFunction(Dictionary<int, string> outputDictionary)
+        {
+            return outputDictionary;
         }
 
         static String FilterSpecialCharacters(String line)

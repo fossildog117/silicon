@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SetEngine
 {
-    static class DecisionTree
+    public static class DecisionTree
     {
         public static void createDiscreteSets(Dictionary<int, string> inputSet, string filePath, BlobPusher pusher)
         {
