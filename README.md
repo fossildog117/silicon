@@ -7,6 +7,9 @@ This software receives a GET request from a REST request and generates a chart b
 
 Data is retrieved on an Azure blob which is used to generate the graphs. We have done data retrieval against local servers which has shown to be significantly faster although this has not been included into the main Chart Engine due to the reason that the Set Engine now produces size mappings that have reduced chart generation speeds.
 
+
+
+
 # Set Engine
 The set engine is responsible for producing sets from any relational database. The engine contains a variety of other applications including the Navigator that is used to navigate a computer's file structure, DBConnector a general purpose database connector for connecting to MySQL databases and DecisionTree that is used to determine the number of sub-sets to generate for each set.
 
