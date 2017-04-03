@@ -11,7 +11,7 @@ namespace Set.Test
     {
 
         List<Dictionary<int, string>> predictedAnswer = SE.SetEngine.GenerateSets(
-            new DBConnection("127.0.0.1", "testdb", "root", "password"), true);
+            new DBConnection("127.0.0.1", "testdb", "root", "0x38be"), true);
 
         [TestMethod]
         public void SetOne()
