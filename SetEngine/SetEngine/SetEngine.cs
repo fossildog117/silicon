@@ -9,8 +9,9 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Mail;
 
 namespace SetEngine
 {
@@ -101,12 +102,53 @@ namespace SetEngine
 
         static BlobPusher blobPusher = new BlobPusher();
         static Dictionary<string, string> setMappings = new Dictionary<string, string>();
+            
+        private class Mailer
+        {
+            private string hostEmail;
+            private string targetEmail;
+            private string password;
+            private string smtp;
+
+            public Mailer() {
+                this.hostEmail = ConfigurationManager.AppSettings["hostEmail"];
+                this.targetEmail = ConfigurationManager.AppSettings["targetEmail"];
+                this.password = ConfigurationManager.AppSettings["hostPassword"];
+                this.smtp = ConfigurationManager.AppSettings["smtp"];
+            }
+
+            public void SendMail()
+            {
+                MailMessage message = new MailMessage();
+                message.To.Add(targetEmail);
+                message.Subject = "Set Engine results";
+                message.From = new MailAddress(hostEmail);
+                message.Body = "Set Engine successfully completed run on " + DateTime.Now;
+                SmtpClient smtpClient = new SmtpClient(smtp);
+                smtpClient.EnableSsl = true;
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = new NetworkCredential(hostEmail, password);
+                smtpClient.Send(message);
+                Console.WriteLine("Email sent successfully");
+            }
+        }
 
         static void Main(string[] args)
         {
-            DBConnection connection = new DBConnection("127.0.0.1", "schools", "root", "password");
+            string host = ConfigurationManager.AppSettings["host"];
+            string db = ConfigurationManager.AppSettings["db"];
+            string username = ConfigurationManager.AppSettings["username"];
+            string password = ConfigurationManager.AppSettings["password"];
+
+            DBConnection connection = new DBConnection(host, db, username, password);
+
+            Mailer m = new Mailer();
+            m.SendMail();
+
             GenerateSets(connection);
+
             blobPusher.pushMap(setMappings);
+
             Console.WriteLine("Program finished, press any key to continue...");
             Console.ReadKey();
         }
